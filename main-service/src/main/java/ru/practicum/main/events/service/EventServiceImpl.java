@@ -21,6 +21,9 @@ import ru.practicum.main.events.repository.EventRepository;
 import ru.practicum.main.exception.BadRequestException;
 import ru.practicum.main.exception.ConflictException;
 import ru.practicum.main.exception.NotFoundException;
+import ru.practicum.main.requests.model.RequestStatus;
+import ru.practicum.main.requests.repository.ParticipationRequestRepository;
+import ru.practicum.main.stats.service.StatsService;
 import ru.practicum.main.users.model.User;
 import ru.practicum.main.users.repository.UserRepository;
 import ru.practicum.main.util.PageRequestUtil;
@@ -28,6 +31,10 @@ import ru.practicum.main.util.PageRequestUtil;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -46,6 +53,8 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final ParticipationRequestRepository requestRepository;
+    private final StatsService statsService;
     private final EventMapper eventMapper;
 
     @Override
@@ -143,10 +152,13 @@ public class EventServiceImpl implements EventService {
         Specification<Event> spec = buildAdminSpec(users, states, categories, rangeStart, rangeEnd);
         PageRequest pageable = PageRequestUtil.from(from, size);
 
-        return eventRepository.findAll(spec, pageable)
+        List<EventFullDto> dtos = eventRepository.findAll(spec, pageable)
                 .stream()
                 .map(eventMapper::toFullDto)
                 .toList();
+
+        enrichAdminEventFullDtos(dtos);
+        return dtos;
     }
 
     @Override
@@ -172,7 +184,33 @@ public class EventServiceImpl implements EventService {
         }
 
         Event saved = eventRepository.save(event);
-        return eventMapper.toFullDto(saved);
+
+        EventFullDto dtoOut = eventMapper.toFullDto(saved);
+        enrichAdminEventFullDtos(List.of(dtoOut));
+        return dtoOut;
+    }
+
+    private void enrichAdminEventFullDtos(List<EventFullDto> dtos) {
+        if (dtos == null || dtos.isEmpty()) return;
+
+        Set<Long> eventIds = dtos.stream()
+                .map(EventFullDto::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        if (eventIds.isEmpty()) return;
+
+        Map<Long, Long> viewsMap = statsService.getEventViewsMap(eventIds, false);
+
+        for (EventFullDto dto : dtos) {
+            Long id = dto.getId();
+            if (id == null) continue;
+
+            long confirmed = requestRepository.countByEventIdAndStatus(id, RequestStatus.CONFIRMED);
+            dto.setConfirmedRequests((int) confirmed);
+
+            dto.setViews(viewsMap.getOrDefault(id, 0L));
+        }
     }
 
     private void applyUserStateAction(Event event, String stateAction) {
