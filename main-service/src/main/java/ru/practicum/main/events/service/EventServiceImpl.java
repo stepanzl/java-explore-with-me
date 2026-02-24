@@ -58,6 +58,10 @@ public class EventServiceImpl implements EventService {
 
         Event event = eventMapper.toEntity(dto);
 
+        if (event.getPaid() == null) event.setPaid(false);
+        if (event.getParticipantLimit() == null) event.setParticipantLimit(0);
+        if (event.getRequestModeration() == null) event.setRequestModeration(true);
+
         if (event.getEventDate() == null) {
             throw new BadRequestException("eventDate must not be null");
         }

@@ -26,13 +26,13 @@ public interface EventMapper {
     @Mapping(target = "createdOn", source = "createdOn", qualifiedByName = "asString")
     @Mapping(target = "eventDate", source = "eventDate", qualifiedByName = "asString")
     @Mapping(target = "publishedOn", source = "publishedOn", qualifiedByName = "asString")
-    @Mapping(target = "views", ignore = true)
-    @Mapping(target = "confirmedRequests", ignore = true)
+    @Mapping(target = "views", expression = "java(0L)")
+    @Mapping(target = "confirmedRequests", expression = "java(0)")
     EventFullDto toFullDto(Event event);
 
     @Mapping(target = "eventDate", source = "eventDate", qualifiedByName = "asString")
-    @Mapping(target = "views", ignore = true)
-    @Mapping(target = "confirmedRequests", ignore = true)
+    @Mapping(target = "views", expression = "java(0L)")
+    @Mapping(target = "confirmedRequests", expression = "java(0)")
     EventShortDto toShortDto(Event event);
 
     @Mapping(target = "id", ignore = true)
@@ -42,6 +42,9 @@ public interface EventMapper {
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "state", ignore = true)
     @Mapping(target = "eventDate", source = "eventDate", qualifiedByName = "asLocalDateTime")
+    @Mapping(target = "paid", defaultValue = "false")
+    @Mapping(target = "participantLimit", defaultValue = "0")
+    @Mapping(target = "requestModeration", defaultValue = "true")
     Event toEntity(NewEventDto dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
