@@ -8,8 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.main.exception.BadRequestException;
-import ru.practicum.main.exception.NotFoundException;
 import ru.practicum.main.events.dto.EventFullDto;
 import ru.practicum.main.events.dto.EventShortDto;
 import ru.practicum.main.events.dto.PublicEventSort;
@@ -17,6 +15,8 @@ import ru.practicum.main.events.mapper.EventMapper;
 import ru.practicum.main.events.model.Event;
 import ru.practicum.main.events.model.EventState;
 import ru.practicum.main.events.repository.EventRepository;
+import ru.practicum.main.exception.BadRequestException;
+import ru.practicum.main.exception.NotFoundException;
 import ru.practicum.main.requests.model.RequestStatus;
 import ru.practicum.main.requests.repository.ParticipationRequestRepository;
 import ru.practicum.main.stats.service.StatsService;
@@ -24,7 +24,12 @@ import ru.practicum.main.util.DateTimeMapper;
 import ru.practicum.main.util.PageRequestUtil;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j

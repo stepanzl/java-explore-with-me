@@ -62,7 +62,8 @@ public class StatsClient {
                     uri,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<ViewStatsDto>>() {}
+                    new ParameterizedTypeReference<List<ViewStatsDto>>() {
+                    }
             );
             return response.getBody() == null ? Collections.emptyList() : response.getBody();
         } catch (RestClientResponseException e) {
