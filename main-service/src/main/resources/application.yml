@@ -21,6 +21,9 @@ spring:
       mode: always
       schema-locations: classpath:schema.sql
 
+stats-server:
+  url: ${STATS_SERVER_URL:http://localhost:9090}
+
 management:
   endpoints:
     web:

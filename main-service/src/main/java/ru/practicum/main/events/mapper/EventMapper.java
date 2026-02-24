@@ -26,13 +26,13 @@ public interface EventMapper {
     @Mapping(target = "createdOn", source = "createdOn", qualifiedByName = "asString")
     @Mapping(target = "eventDate", source = "eventDate", qualifiedByName = "asString")
     @Mapping(target = "publishedOn", source = "publishedOn", qualifiedByName = "asString")
-    @Mapping(target = "views", expression = "java(0L)")
-    @Mapping(target = "confirmedRequests", expression = "java(0)")
+    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "confirmedRequests", ignore = true)
     EventFullDto toFullDto(Event event);
 
     @Mapping(target = "eventDate", source = "eventDate", qualifiedByName = "asString")
-    @Mapping(target = "views", expression = "java(0L)")
-    @Mapping(target = "confirmedRequests", expression = "java(0)")
+    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "confirmedRequests", ignore = true)
     EventShortDto toShortDto(Event event);
 
     @Mapping(target = "id", ignore = true)

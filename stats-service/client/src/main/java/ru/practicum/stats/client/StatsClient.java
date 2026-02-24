@@ -53,7 +53,7 @@ public class StatsClient {
                 .queryParamIfPresent("unique", unique == null
                         ? java.util.Optional.empty()
                         : java.util.Optional.of(unique))
-                .build(true)
+                .build()
                 .encode()
                 .toUri();
 

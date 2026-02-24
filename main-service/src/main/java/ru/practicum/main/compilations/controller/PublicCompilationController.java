@@ -1,7 +1,10 @@
 package ru.practicum.main.compilations.controller;
 
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.main.compilations.dto.CompilationDto;
 import ru.practicum.main.compilations.service.CompilationService;
@@ -9,6 +12,7 @@ import ru.practicum.main.compilations.service.CompilationService;
 import java.util.List;
 
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/compilations")
@@ -18,14 +22,14 @@ public class PublicCompilationController {
 
     @GetMapping
     public List<CompilationDto> getAll(@RequestParam(required = false) Boolean pinned,
-                                       @RequestParam(defaultValue = "0") int from,
-                                       @RequestParam(defaultValue = "10") int size) {
+                                       @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                       @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("GET /compilations?pinned={}, from={}, size={}", pinned, from, size);
         return compilationService.getAll(pinned, from, size);
     }
 
     @GetMapping("/{compId}")
-    public CompilationDto getById(@PathVariable long compId) {
+    public CompilationDto getById(@PathVariable @Positive long compId) {
         log.info("GET /compilations/{}", compId);
         return compilationService.getById(compId);
     }
