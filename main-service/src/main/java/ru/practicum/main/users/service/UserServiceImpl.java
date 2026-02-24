@@ -23,14 +23,15 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
     public UserDto create(NewUserRequest request) {
         log.info("Create user: email={}", request.getEmail());
-        User saved = userRepository.save(UserMapper.toEntity(request));
+        User saved = userRepository.save(userMapper.toEntity(request));
         log.info("User created: id={}", saved.getId());
-        return UserMapper.toDto(saved);
+        return userMapper.toDto(saved);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
                 : userRepository.findAllByIdIn(ids, pageable);
 
         return page.stream()
-                .map(UserMapper::toDto)
+                .map(userMapper::toDto)
                 .toList();
     }
 
