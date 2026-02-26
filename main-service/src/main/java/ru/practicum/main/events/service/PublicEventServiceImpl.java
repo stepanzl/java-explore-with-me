@@ -3,7 +3,7 @@ package ru.practicum.main.events.service;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -76,7 +76,7 @@ public class PublicEventServiceImpl implements PublicEventService {
             events = eventRepository.findAll(spec);
         } else {
             Sort s = Sort.by(Sort.Direction.ASC, "eventDate");
-            PageRequest pageable = PageRequestUtil.from(from, size, s);
+            Pageable pageable = PageRequestUtil.from(from, size, s);
             events = eventRepository.findAll(spec, pageable).getContent();
         }
 

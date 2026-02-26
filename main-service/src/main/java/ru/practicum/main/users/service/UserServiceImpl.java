@@ -3,7 +3,7 @@ package ru.practicum.main.users.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.exception.NotFoundException;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getAll(List<Long> ids, int from, int size) {
         log.info("Get users: idsProvided={}, from={}, size={}", ids != null, from, size);
 
-        PageRequest pageable = PageRequestUtil.from(from, size);
+        Pageable pageable = PageRequestUtil.from(from, size);
 
         if (ids != null && ids.isEmpty()) {
             return List.of();

@@ -3,7 +3,7 @@ package ru.practicum.main.events.service;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,7 +90,7 @@ public class EventServiceImpl implements EventService {
         log.info("Get private events: userId={}, from={}, size={}", userId, from, size);
         getUser(userId);
 
-        PageRequest pageable = PageRequestUtil.from(from, size);
+        Pageable pageable = PageRequestUtil.from(from, size);
         return eventRepository.findAllByInitiatorId(userId, pageable)
                 .stream()
                 .map(eventMapper::toShortDto)
@@ -150,7 +150,7 @@ public class EventServiceImpl implements EventService {
         log.info("Search admin events: from={}, size={}", from, size);
 
         Specification<Event> spec = buildAdminSpec(users, states, categories, rangeStart, rangeEnd);
-        PageRequest pageable = PageRequestUtil.from(from, size);
+        Pageable pageable = PageRequestUtil.from(from, size);
 
         List<EventFullDto> dtos = eventRepository.findAll(spec, pageable)
                 .stream()

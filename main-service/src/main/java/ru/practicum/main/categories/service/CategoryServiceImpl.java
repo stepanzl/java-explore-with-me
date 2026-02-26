@@ -2,7 +2,7 @@ package ru.practicum.main.categories.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.categories.dto.CategoryDto;
@@ -72,7 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDto> getAll(int from, int size) {
         log.info("Get categories: from={}, size={}", from, size);
 
-        PageRequest pageable = PageRequestUtil.from(from, size);
+        Pageable pageable = PageRequestUtil.from(from, size);
         return categoryRepository.findAll(pageable)
                 .stream()
                 .map(CategoryMapper::toDto)

@@ -2,7 +2,7 @@ package ru.practicum.main.compilations.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.compilations.dto.CompilationDto;
@@ -89,7 +89,7 @@ public class CompilationServiceImpl implements CompilationService {
     public List<CompilationDto> getAll(Boolean pinned, int from, int size) {
         log.info("Get compilations: pinned={}, from={}, size={}", pinned, from, size);
 
-        PageRequest pageable = PageRequestUtil.from(from, size);
+        Pageable pageable = PageRequestUtil.from(from, size);
 
         if (pinned == null) {
             return compilationRepository.findAll(pageable)
