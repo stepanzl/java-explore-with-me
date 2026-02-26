@@ -53,7 +53,7 @@ public class StatsClient {
                 .queryParamIfPresent("unique", unique == null
                         ? java.util.Optional.empty()
                         : java.util.Optional.of(unique))
-                .build(true)
+                .build()
                 .encode()
                 .toUri();
 
@@ -62,7 +62,8 @@ public class StatsClient {
                     uri,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<ViewStatsDto>>() {}
+                    new ParameterizedTypeReference<List<ViewStatsDto>>() {
+                    }
             );
             return response.getBody() == null ? Collections.emptyList() : response.getBody();
         } catch (RestClientResponseException e) {
