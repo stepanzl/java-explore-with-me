@@ -17,6 +17,9 @@ import ru.practicum.main.events.model.EventState;
 import ru.practicum.main.events.repository.EventRepository;
 import ru.practicum.main.exception.BadRequestException;
 import ru.practicum.main.exception.NotFoundException;
+import ru.practicum.main.locations.model.LocationArea;
+import ru.practicum.main.locations.service.LocationAreaService;
+import ru.practicum.main.locations.spec.LocationAreaEventSpecifications;
 import ru.practicum.main.requests.model.RequestStatus;
 import ru.practicum.main.requests.repository.ParticipationRequestRepository;
 import ru.practicum.main.stats.service.StatsService;
@@ -44,6 +47,8 @@ public class PublicEventServiceImpl implements PublicEventService {
     private final DateTimeMapper dateTimeMapper;
     private final StatsService statsService;
 
+    private final LocationAreaService locationAreaService;
+
     @Override
     public List<EventShortDto> getPublicEvents(String text,
                                                List<Long> categories,
@@ -52,6 +57,7 @@ public class PublicEventServiceImpl implements PublicEventService {
                                                String rangeEnd,
                                                Boolean onlyAvailable,
                                                PublicEventSort sort,
+                                               Long locationId,
                                                int from,
                                                int size,
                                                HttpServletRequest request) {
@@ -64,11 +70,17 @@ public class PublicEventServiceImpl implements PublicEventService {
             throw new BadRequestException("rangeStart must be before rangeEnd");
         }
 
+        LocationArea area = null;
+        if (locationId != null) {
+            area = locationAreaService.getByIdOrThrow(locationId);
+        }
+
         Specification<Event> spec = PublicSpecs.publishedOnly()
                 .and(PublicSpecs.text(text))
                 .and(PublicSpecs.categories(categories))
                 .and(PublicSpecs.paid(paid))
-                .and(PublicSpecs.range(start, end));
+                .and(PublicSpecs.range(start, end))
+                .and(LocationAreaEventSpecifications.within(area));
 
         List<Event> events;
 

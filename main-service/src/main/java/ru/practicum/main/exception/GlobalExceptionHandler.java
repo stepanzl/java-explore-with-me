@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -101,6 +102,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleUnexpected(Exception ex) {
         log.error("Unexpected error", ex);
         return respond(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error.", ex.getMessage(), Collections.emptyList());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        log.warn("Bad request: {}", ex.getMessage());
+        return respond(HttpStatus.BAD_REQUEST, REASON_BAD_REQUEST, ex.getMessage(), Collections.emptyList());
     }
 
     private ResponseEntity<ApiError> respond(HttpStatus status, String reason, String message, List<String> errors) {

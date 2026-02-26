@@ -8,6 +8,7 @@ import ru.practicum.main.events.dto.PublicEventSort;
 import java.util.List;
 
 public interface PublicEventService {
+
     List<EventShortDto> getPublicEvents(String text,
                                         List<Long> categories,
                                         Boolean paid,
@@ -15,6 +16,7 @@ public interface PublicEventService {
                                         String rangeEnd,
                                         Boolean onlyAvailable,
                                         PublicEventSort sort,
+                                        Long locationId,
                                         int from,
                                         int size,
                                         HttpServletRequest request);
