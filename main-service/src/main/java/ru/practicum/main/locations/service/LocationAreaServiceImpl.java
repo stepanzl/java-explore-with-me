@@ -1,6 +1,7 @@
 package ru.practicum.main.locations.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LocationAreaServiceImpl implements LocationAreaService {
@@ -56,8 +58,12 @@ public class LocationAreaServiceImpl implements LocationAreaService {
     @Override
     @Transactional
     public void delete(long locationId) {
-        LocationArea entity = getByIdOrThrow(locationId);
-        repository.delete(entity);
+        if (!repository.existsById(locationId)) {
+            throw new NotFoundException(
+                    "LocationArea with id=" + locationId + " was not found"
+            );
+        }
+        repository.deleteById(locationId);
     }
 
     @Override
