@@ -35,12 +35,13 @@ public class PublicEventController {
                                          @RequestParam(required = false) String rangeEnd,
                                          @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                          @RequestParam(required = false) PublicEventSort sort,
+                                         @RequestParam(required = false) Long locationId,
                                          @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                          @RequestParam(defaultValue = "10") @Positive int size,
                                          HttpServletRequest request) {
         log.info("GET /events");
         return publicEventService.getPublicEvents(
-                text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request
+                text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, locationId, from, size, request
         );
     }
 
